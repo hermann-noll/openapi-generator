@@ -286,7 +286,7 @@ public abstract class AbstractCSharpCodegen extends DefaultCodegen implements Co
         // {{sourceFolder}}
         if (additionalProperties.containsKey(CodegenConstants.SOURCE_FOLDER)) {
             setSourceFolder((String) additionalProperties.get(CodegenConstants.SOURCE_FOLDER));
-            
+
             // TODO: Move to its own option when a parameter for 'testFolder' is added.
             setTestFolder((String) additionalProperties.get(CodegenConstants.SOURCE_FOLDER));
         } else {
@@ -455,7 +455,7 @@ public abstract class AbstractCSharpCodegen extends DefaultCodegen implements Co
         if ("string?".equals(dataType)){
             enumVars.forEach((enumVar) -> {
                 enumVar.put("isString", true);
-            }); 
+            });
         }
 
         return enumVars;
@@ -1045,6 +1045,13 @@ public abstract class AbstractCSharpCodegen extends DefaultCodegen implements Co
 
     @Override
     public String getTypeDeclaration(Schema p) {
+        if (p.get$ref() != null)
+        {
+            // isArray/MapSchema do not work with referenced schemas
+            final String schemaName = p.get$ref().substring(p.get$ref().lastIndexOf('/') + 1);
+            p = openAPI.getComponents().getSchemas().get(schemaName);
+        }
+
         if (ModelUtils.isArraySchema(p)) {
             return getArrayTypeDeclaration((ArraySchema) p);
         } else if (ModelUtils.isMapSchema(p)) {
@@ -1159,7 +1166,7 @@ public abstract class AbstractCSharpCodegen extends DefaultCodegen implements Co
     public void setSourceFolder(String sourceFolder) {
         this.sourceFolder = sourceFolder;
     }
-    
+
     public void setTestFolder(String testFolder) {
         this.testFolder = testFolder;
     }

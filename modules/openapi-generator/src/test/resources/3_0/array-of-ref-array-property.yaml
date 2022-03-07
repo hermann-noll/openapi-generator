@@ -1,0 +1,30 @@
+openapi: 3.0.0
+info:
+  title: Minimal bug reproduction
+  description: .
+  version: v1
+paths:
+  /some:
+    get:
+      responses:
+        '200':
+          description: .
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Root'
+components:
+  schemas:
+    Root:
+      type: object
+      properties:
+        subs:
+          $ref: '#/components/schemas/Sub'
+    Sub:
+      type: array
+      items:
+        $ref: '#/components/schemas/SubSub'
+    SubSub:
+      type: array
+      items:
+        type: number

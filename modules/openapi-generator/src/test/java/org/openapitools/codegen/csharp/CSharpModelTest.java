@@ -142,6 +142,17 @@ public class CSharpModelTest {
         Assert.assertTrue(property.isContainer);
     }
 
+    @Test(description = "convert a model with an array of arrays property")
+    public void arrayOfArrayPropertyTest() {
+        final OpenAPI openAPI = TestUtils.parseFlattenSpec("src/test/resources/3_0/array-of-ref-array-property.yaml");
+        final AbstractCSharpCodegen codegen = new CSharpNetCoreClientCodegen();
+        codegen.setOpenAPI(openAPI);
+        final Schema schema = openAPI.getComponents().getSchemas().get("Root");
+        final CodegenModel generated = codegen.fromModel("Root", schema);
+
+        Assert.assertEquals(generated.vars.get(0).dataType, "List<List<decimal>>");
+    }
+
     private Schema getArrayTestSchema() {
         return new Schema()
                 .description("a sample model")
